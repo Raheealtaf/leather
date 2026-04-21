@@ -1,0 +1,85 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  products    Product[]
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String
+  price       Decimal     @db.Decimal(10, 2)
+  description String      @db.Text
+  images      String      @db.Text
+  sizes       String      // e.g., "S,M,L,XL"
+  inStock     Boolean     @default(true)
+  
+  // Relationship to Category
+  categoryId  Int
+  category    Category    @relation(fields: [categoryId], references: [id])
+  
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  orderItems  OrderItem[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id            Int         @id @default(autoincrement())
+  
+  // Customer Details
+  customerEmail String
+  firstName     String
+  lastName      String
+  address       String
+  city          String
+  phone         String
+  
+  // Payment & Totals
+  paymentMethod String      // e.g., "cod" or "card"
+  totalAmount   Float
+  shippingCost  Float       // 0 for free, 500 for standard
+  
+  // Order Status Tracking
+  status        String      @default("Pending") // Pending, Confirmed, Dispatched, Delivered, Cancelled
+  
+  // Timestamps
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  // Relation to the items inside this order
+  items         OrderItem[]
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  
+  // What did they buy and how much did it cost at the time?
+  quantity  Int
+  price     Float
+  
+  // Link to the specific order
+  orderId   Int
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  // Link to the specific product (FIXED: Only defined once, with Cascade included!)
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
