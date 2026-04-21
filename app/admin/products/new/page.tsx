@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 // FIXED: Using the @ alias to reliably find the components folder
 import ProductForm from "../../ProductForm";
 import { PackagePlus } from "lucide-react";
+export const dynamic = "force-dynamic";
 
 export default async function NewProductPage() {
   // Fetch the categories from MySQL
