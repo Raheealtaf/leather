@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PackageX, ArrowLeft } from "lucide-react";
+import { PackageX, ArrowLeft, SlidersHorizontal } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -11,28 +11,21 @@ export default async function CategoryPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  // 1. Read the URL (e.g., "jackets" or "travel-bags")
   const resolvedParams = await params;
-
-  // Clean up the URL string so we can search the database with it
-  // Turns "travel-bags" into "travel bags"
   const searchTerm = resolvedParams.slug.replace(/-/g, " ");
 
-  // 2. Find the category in the database
   const category = await prisma.category.findFirst({
     where: {
       name: {
-        contains: searchTerm, // Matches "Premium Jackets" if URL is "jackets"
+        contains: searchTerm,
       },
     },
   });
 
-  // If the category doesn't exist, show a 404 page
   if (!category) {
     notFound();
   }
 
-  // 3. Fetch ONLY the products that belong to this specific category
   const products = await prisma.product.findMany({
     where: {
       categoryId: category.id,
@@ -42,96 +35,126 @@ export default async function CategoryPage({
     include: { category: true },
   });
 
+  // You can replace this with a dynamic category image from your database if you have one
+  const bannerImage =
+    "https://images.unsplash.com/photo-1594035910387-fea47714263f?q=80&w=2000&auto=format&fit=crop";
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      {/* 1. DYNAMIC HERO SECTION */}
-      <section className="bg-slate-900 text-white py-16 lg:py-24 border-b-8 border-amber-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-amber-500 font-bold tracking-widest uppercase text-sm mb-4">
-            Curated Collection
-          </p>
-          <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 capitalize">
+    <div className="min-h-screen bg-white font-sans text-black">
+      {/* ── FULL-WIDTH EDITORIAL BANNER ────────────────────────────── */}
+      <section className="relative w-full h-[50vh] md:h-[60vh] flex items-end justify-center pb-16 md:pb-24">
+        {/* Banner Background */}
+        <div className="absolute inset-0 bg-black overflow-hidden">
+          <img
+            src={bannerImage}
+            alt={`${category.name} banner`}
+            className="w-full h-full object-cover opacity-70"
+          />
+          {/* Gradient to ensure text readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        </div>
+
+        {/* Banner Content */}
+        <div className="relative z-10 text-center px-4 w-full max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-1000 ease-out">
+          <div className="inline-block mb-4 border border-white/30 px-4 py-1 backdrop-blur-sm">
+            <span className="text-white text-[10px] font-bold tracking-[0.2em] uppercase">
+              The Collection
+            </span>
+          </div>
+          <h1 className="text-5xl md:text-7xl font-bold text-white uppercase tracking-widest mb-4">
             {category.name}
           </h1>
-          <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">
+          <p className="text-white/80 text-sm md:text-base max-w-xl mx-auto font-light tracking-wide">
             {category.description ||
-              `Explore our exclusive range of high-quality ${category.name.toLowerCase()}, handcrafted for the modern lifestyle.`}
+              `Discover our exclusive selection of ${category.name.toLowerCase()}, crafted for elegance and everyday luxury.`}
           </p>
         </div>
       </section>
 
-      {/* 2. PRODUCT GRID SECTION */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Back to Shop Navigation */}
-        <div className="mb-8">
+      {/* ── MINIMALIST TOOLBAR ──────────────────────────────────────── */}
+      <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <Link
             href="/shop"
-            className="inline-flex items-center text-sm font-bold text-slate-500 hover:text-amber-600 transition-colors"
+            className="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-gray-900 hover:text-gray-500 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" /> Back to All Products
+            <ArrowLeft className="w-4 h-4" />
+            Back
           </Link>
-        </div>
 
+          <div className="flex items-center gap-6 text-xs font-semibold uppercase tracking-widest text-gray-900">
+            <span className="text-gray-500">{products.length} Items</span>
+            <div className="h-3 w-px bg-gray-300" />
+            <button className="flex items-center gap-2 hover:text-gray-500 transition-colors">
+              <SlidersHorizontal className="w-4 h-4" />
+              Filters
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ── BORDERLESS PRODUCT GRID ─────────────────────────────────── */}
+      <main className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {products.length === 0 ? (
-          // Empty State if no products are in this category yet
-          <div className="bg-white rounded-3xl p-16 text-center border border-slate-100 shadow-sm flex flex-col items-center">
-            <PackageX className="h-20 w-20 text-slate-300 mb-6" />
-            <h3 className="text-2xl font-bold text-slate-900">Coming Soon</h3>
-            <p className="mt-2 text-slate-500 text-lg">
-              We are currently crafting new items for the {category.name}{" "}
-              collection.
+          <div className="py-32 flex flex-col items-center justify-center text-center">
+            <PackageX className="w-12 h-12 text-gray-300 mb-6" />
+            <h2 className="text-xl font-bold uppercase tracking-widest">
+              Collection Empty
+            </h2>
+            <p className="text-gray-500 mt-2 max-w-sm">
+              We are currently updating our inventory for this category.
             </p>
             <Link
               href="/shop"
-              className="mt-8 bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold py-3 px-8 rounded-lg transition-colors"
+              className="mt-8 bg-black text-white text-xs font-bold uppercase tracking-widest py-4 px-10 hover:bg-gray-800 transition-colors"
             >
-              Continue Shopping
+              Back to Shop
             </Link>
           </div>
         ) : (
-          // The Beautiful Product Grid
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-8 md:gap-y-16">
             {products.map((product) => {
-              const firstImageClass = product.images
+              const firstImageUrl = product.images
                 ? product.images.split(",")[0]
-                : "bg-gray-100";
+                : "/placeholder.jpg";
 
               return (
                 <Link
                   key={product.id}
                   href={`/product/${product.id}`}
-                  className="group flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 hover:border-amber-200"
+                  className="group flex flex-col"
                 >
-                  {/* Product Image Placeholder */}
-                  <div
-                    className={`relative aspect-[4/5] w-full overflow-hidden ${firstImageClass}`}
-                  >
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                    <div className="absolute inset-x-4 bottom-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                      <div className="w-full bg-slate-900 text-white text-center py-3 rounded-xl font-bold shadow-lg">
-                        View Details
+                  {/* Clean, borderless image container */}
+                  <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-50 mb-4">
+                    <img
+                      src={firstImageUrl}
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
+                    />
+
+                    {/* Minimalist Quick Add overlay */}
+                    <div className="absolute inset-x-4 bottom-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 flex justify-center">
+                      <div className="bg-white/95 backdrop-blur-sm text-black text-[10px] font-bold uppercase tracking-[0.2em] py-3 px-6 shadow-lg hover:bg-black hover:text-white transition-colors w-full text-center cursor-pointer">
+                        View Item
                       </div>
                     </div>
                   </div>
 
-                  {/* Product Info */}
-                  <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-lg font-bold text-slate-900 leading-snug mb-2 group-hover:text-amber-600 transition-colors">
+                  {/* Minimalist typography */}
+                  <div className="flex flex-col text-center">
+                    <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-1 line-clamp-1">
                       {product.name}
                     </h3>
-
-                    <div className="mt-auto flex items-center justify-between pt-4 border-t border-slate-100">
-                      <p className="text-xl font-extrabold text-slate-900">
-                        Rs {product.price.toLocaleString()}
-                      </p>
-                    </div>
+                    <p className="text-sm text-gray-500 font-medium">
+                      Rs {product.price.toLocaleString()}
+                    </p>
                   </div>
                 </Link>
               );
             })}
           </div>
         )}
-      </section>
+      </main>
     </div>
   );
 }

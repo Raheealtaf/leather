@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ShoppingBag, Search, Menu, X } from "lucide-react"; // REMOVED: User
+import { ShoppingBag, Search, Menu, X } from "lucide-react";
 import SearchBar from "../SearchBar";
 import { useCart } from "../../context/CartContext";
 import { usePathname } from "next/navigation";
@@ -14,155 +14,138 @@ export default function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
 
-  // IF WE ARE IN THE ADMIN PANEL, DO NOT SHOW THE NAVBAR
   if (pathname.startsWith("/admin")) {
     return null;
   }
 
   const { itemCount } = useCart();
 
+  const navLinks = [
+    { name: "Shop All", path: "/shop" },
+    { name: "Jackets", path: "/categories/jackets" },
+    { name: "Travel Bags", path: "/categories/bags" },
+    { name: "Accessories", path: "/categories/accessories" },
+    { name: "The Heritage", path: "/about" },
+  ];
+
   return (
-    <nav className="fixed w-full z-50 top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="flex justify-between items-center h-20 sm:h-24">
-          {/* Left: Mobile Menu Button */}
-          <div className="flex items-center lg:hidden">
+    <nav className="fixed w-full z-50 top-0 bg-[#FDFBF7]/95 backdrop-blur-md text-[#111] font-sans border-b border-gray-200/50 transition-all duration-300">
+      {/* ── TOP ROW: ICONS & CENTERED LOGO ───────────────────────── */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16 md:h-20">
+          {/* Left: Mobile Menu & Desktop Search */}
+          <div className="flex-1 flex justify-start items-center gap-4">
+            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-600 hover:text-slate-900 focus:outline-none p-2"
+              className="lg:hidden p-2 -ml-2 text-gray-600 hover:text-black transition-colors"
             >
               {isMobileMenuOpen ? (
-                <X className="h-6 w-6" />
+                <X className="h-6 w-6 stroke-[1.2]" />
               ) : (
-                <Menu className="h-6 w-6" />
+                <Menu className="h-6 w-6 stroke-[1.2]" />
               )}
+            </button>
+
+            {/* Desktop Search */}
+            <button
+              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              className="hidden lg:flex items-center gap-2 text-gray-500 hover:text-black transition-colors group"
+            >
+              <Search className="h-4 w-4 stroke-[1.5] transition-transform group-hover:scale-110" />
+              <span className="text-[10px] tracking-[0.2em] uppercase font-medium">
+                Search
+              </span>
             </button>
           </div>
 
-          {/* Center/Left: Logo (Adjusted for better premium sizing) */}
-          <div className="flex-shrink-0 flex items-center justify-center lg:justify-start flex-1 lg:flex-none">
+          {/* Center: Centered Logo */}
+          <div className="flex-shrink-0 flex items-center justify-center">
             <Link href="/" className="flex items-center">
-              {/* FIXED: Added .src and increased height (h-12 on mobile, h-16 on desktop) */}
               <img
                 src={logo.src}
                 alt="RS Leather Logo"
-                className="h-12 sm:h-16 w-auto object-contain"
+                className="h-10 md:h-14 w-auto object-contain"
               />
-              Leather Products
             </Link>
           </div>
 
-          {/* Center: Desktop Navigation */}
-          <div className="hidden lg:flex space-x-10 items-center justify-center flex-1">
-            <Link
-              href="/shop"
-              className="text-gray-600 hover:text-amber-700 transition-colors font-bold text-sm tracking-widest uppercase"
-            >
-              Shop
-            </Link>
-            <Link
-              href="/categories/jackets"
-              className="text-gray-600 hover:text-amber-700 transition-colors font-bold text-sm tracking-widest uppercase"
-            >
-              Jackets
-            </Link>
-            <Link
-              href="/categories/bags"
-              className="text-gray-600 hover:text-amber-700 transition-colors font-bold text-sm tracking-widest uppercase"
-            >
-              Bags
-            </Link>
-            <Link
-              href="/about"
-              className="text-gray-600 hover:text-amber-700 transition-colors font-bold text-sm tracking-widest uppercase"
-            >
-              Heritage
-            </Link>
-          </div>
-
-          {/* Right: Icons */}
-          <div className="flex items-center space-x-5 lg:space-x-6 flex-shrink-0">
-            {/* Desktop Search Toggle Button */}
-            <button
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className={`hidden sm:block transition-transform hover:scale-110 ${isSearchOpen ? "text-amber-700" : "text-gray-600 hover:text-slate-900"}`}
-            >
-              {isSearchOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Search className="h-5 w-5" />
-              )}
-            </button>
-
-            {/* DYNAMIC CART BADGE */}
+          {/* Right: Cart */}
+          <div className="flex-1 flex justify-end items-center">
             <Link
               href="/cart"
-              className="text-gray-600 hover:text-slate-900 relative transition-transform hover:scale-110 flex items-center p-2"
+              className="flex items-center gap-2 text-gray-500 hover:text-black transition-colors group"
             >
-              <ShoppingBag className="h-6 w-6" />
-              {/* Only show the red dot if there are items in the cart */}
-              {itemCount > 0 && (
-                <span className="absolute top-0 right-0 flex h-5 w-5 items-center justify-center rounded-full bg-amber-700 text-xs font-bold text-white shadow-md transform translate-x-1/4 -translate-y-1/4">
-                  {itemCount}
-                </span>
-              )}
+              <span className="hidden lg:block text-[10px] tracking-[0.2em] uppercase font-medium">
+                Cart
+              </span>
+              <div className="relative">
+                <ShoppingBag className="h-5 w-5 md:h-6 md:w-6 stroke-[1.2] transition-transform group-hover:scale-110" />
+                {/* Elegant Cart Badge */}
+                {itemCount > 0 && (
+                  <span className="absolute -top-1 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#111] text-[9px] font-bold text-white">
+                    {itemCount}
+                  </span>
+                )}
+              </div>
             </Link>
           </div>
         </div>
-
-        {/* DESKTOP SEARCH DROPDOWN */}
-        {isSearchOpen && (
-          <div className="hidden sm:block absolute top-[88px] left-0 w-full bg-white border-b border-gray-100 shadow-xl p-6 z-[100] animate-in slide-in-from-top-2">
-            <div className="max-w-2xl mx-auto flex items-center justify-center gap-4 relative">
-              <SearchBar />
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Mobile Navigation Menu */}
+      {/* ── BOTTOM ROW: DESKTOP NAVIGATION LINKS ─────────────────── */}
+      <div className="hidden lg:flex justify-center items-center h-12 border-t border-gray-200/30">
+        <div className="flex space-x-12">
+          {navLinks.map((item) => (
+            <Link
+              key={item.name}
+              href={item.path}
+              className="relative text-[11px] font-medium tracking-[0.2em] uppercase text-gray-600 hover:text-[#C8A96E] transition-colors group py-2"
+            >
+              {item.name}
+              {/* Subtle underline hover effect */}
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#C8A96E] transition-all duration-300 group-hover:w-full" />
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* ── DESKTOP SEARCH DROPDOWN ──────────────────────────────── */}
+      {isSearchOpen && (
+        <div className="hidden lg:block absolute top-[128px] left-0 w-full bg-[#FDFBF7] border-b border-gray-200/50 p-8 shadow-sm z-[100] animate-in slide-in-from-top-2">
+          <div className="max-w-2xl mx-auto flex items-center justify-center gap-4">
+            <SearchBar />
+          </div>
+        </div>
+      )}
+
+      {/* ── MOBILE NAVIGATION MENU ───────────────────────────────── */}
       <div
-        className={`lg:hidden absolute w-full bg-white border-b border-gray-100 shadow-lg transition-all duration-300 ease-in-out ${
+        className={`lg:hidden absolute w-full bg-[#FDFBF7] border-b border-gray-200/50 shadow-xl transition-all duration-500 ease-in-out ${
           isMobileMenuOpen
             ? "max-h-[800px] opacity-100 visible overflow-visible"
             : "max-h-0 opacity-0 invisible overflow-hidden"
         }`}
       >
-        <div className="px-4 pt-2 pb-6 space-y-2 flex flex-col relative z-50">
-          {/* MOBILE SEARCH BAR */}
-          <div className="py-4 relative z-50">
+        <div className="flex flex-col px-6 py-4">
+          {/* Mobile Search */}
+          <div className="py-4 border-b border-gray-200/50 mb-4">
             <SearchBar />
           </div>
 
-          <Link
-            href="/shop"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block px-3 py-3 text-base font-medium text-gray-800 hover:bg-gray-50 hover:text-amber-700 rounded-md"
-          >
-            Shop All
-          </Link>
-          <Link
-            href="/categories/jackets"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block px-3 py-3 text-base font-medium text-gray-800 hover:bg-gray-50 hover:text-amber-700 rounded-md"
-          >
-            Jackets
-          </Link>
-          <Link
-            href="/categories/bags"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block px-3 py-3 text-base font-medium text-gray-800 hover:bg-gray-50 hover:text-amber-700 rounded-md"
-          >
-            Bags
-          </Link>
-          <Link
-            href="/about"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block px-3 py-3 text-base font-medium text-gray-800 hover:bg-gray-50 hover:text-amber-700 rounded-md"
-          >
-            Heritage
-          </Link>
-          {/* REMOVED: Mobile Account Link */}
+          {/* Mobile Links */}
+          <div className="flex flex-col space-y-6 py-4">
+            {navLinks.map((item) => (
+              <Link
+                key={item.name}
+                href={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[12px] font-medium tracking-[0.25em] uppercase text-gray-800 hover:text-[#C8A96E] transition-colors"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </nav>

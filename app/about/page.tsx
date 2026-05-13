@@ -4,59 +4,56 @@ import { Scissors, ShieldCheck, Leaf, Clock, ArrowRight } from "lucide-react";
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* 1. HERO SECTION */}
-      <section className="relative bg-slate-900 text-white py-32 lg:py-48 overflow-hidden">
-        {/* Background Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-900/90 to-slate-900 z-10"></div>
+    <div className="min-h-screen bg-[#FDFBF7] text-[#111] font-sans pt-20 md:pt-32">
+      {/* ── 1. EDITORIAL HERO SECTION ── */}
+      <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center pb-16 md:pb-24">
+        <p className="text-[#C8A96E] font-bold tracking-[0.25em] uppercase text-[10px] mb-8">
+          The Heritage
+        </p>
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif tracking-wide mb-8 max-w-4xl mx-auto leading-tight text-[#111]">
+          Forged in Tradition.
+          <br />
+          <span className="text-gray-400">Crafted for Tomorrow.</span>
+        </h1>
+        <p className="text-sm md:text-base text-gray-500 leading-relaxed max-w-2xl mx-auto font-light">
+          At RS Leather, we believe that true luxury isn't manufactured on an
+          assembly line. It is shaped by hand, perfected over time, and designed
+          to last a lifetime.
+        </p>
+      </section>
 
-        {/* Placeholder for Hero Background Image */}
-        <div className="absolute inset-0 bg-slate-800 opacity-40">
-          {/* Add your workshop background image here later */}
-        </div>
-
-        <div className="relative z-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-amber-500 font-bold tracking-[0.2em] uppercase text-sm mb-6">
-            Our Heritage
-          </p>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-8">
-            Forged in Tradition.
-            <br />
-            <span className="text-slate-400">Crafted for Tomorrow.</span>
-          </h1>
-          <p className="text-lg md:text-2xl text-slate-300 leading-relaxed max-w-3xl mx-auto">
-            At RS Leathers, we believe that true luxury isn't manufactured on an
-            assembly line. It is shaped by hand, perfected over time, and
-            designed to last a lifetime.
-          </p>
+      {/* Hero Image Block (Sharp, edge-to-edge on mobile, inset on desktop) */}
+      <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mb-24 md:mb-32">
+        <div className="w-full aspect-[16/9] md:aspect-[21/9] bg-gray-200 relative overflow-hidden group">
+          {/* REPLACE WITH YOUR ACTUAL WORKSHOP IMAGE */}
+          <div className="absolute inset-0 bg-[#111] flex items-center justify-center text-gray-600 text-[10px] tracking-[0.2em] uppercase">
+            [ Full-Width Workshop / Brand Image ]
+          </div>
         </div>
       </section>
 
-      {/* 2. THE STORY SECTION (Split Layout) */}
-      <section className="py-20 lg:py-32 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center gap-16">
-          {/* Left Side: Images */}
-          <div className="w-full lg:w-1/2 relative">
-            <div className="aspect-[4/5] w-full max-w-md bg-slate-100 rounded-2xl overflow-hidden shadow-2xl relative z-10">
-              <div className="absolute inset-0 flex items-center justify-center text-slate-400 font-medium border-2 border-dashed border-slate-300 m-4 rounded-xl">
-                [Workshop Image 1]
-              </div>
-            </div>
-            {/* Offset decorative image */}
-            <div className="hidden sm:block absolute -bottom-12 -right-12 aspect-square w-64 bg-slate-800 rounded-2xl overflow-hidden shadow-2xl border-8 border-white z-20">
-              <div className="absolute inset-0 flex items-center justify-center text-slate-500 font-medium">
-                [Leather Detail]
+      {/* ── 2. THE STORY SECTION (Minimalist Split Layout) ── */}
+      <section className="py-16 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
+          {/* Left Side: Sharp Image */}
+          <div className="w-full lg:w-1/2">
+            <div className="aspect-[3/4] w-full max-w-md mx-auto lg:mx-0 bg-gray-100 overflow-hidden relative">
+              {/* REPLACE WITH YOUR LEATHER DETAIL IMAGE */}
+              <div className="absolute inset-0 flex items-center justify-center text-gray-400 text-[10px] tracking-[0.2em] uppercase border border-gray-300 m-4">
+                [ Artisan Detail Image ]
               </div>
             </div>
           </div>
 
-          {/* Right Side: Text */}
-          <div className="w-full lg:w-1/2">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-6">
-              A Legacy of <span className="text-amber-600">Uncompromising</span>{" "}
+          {/* Right Side: Editorial Text */}
+          <div className="w-full lg:w-1/2 flex flex-col justify-center">
+            <h2 className="text-3xl md:text-5xl font-serif text-[#111] mb-8 leading-tight">
+              A Legacy of <br className="hidden md:block" />
+              <span className="italic text-gray-400">Uncompromising</span>{" "}
               Quality.
             </h2>
-            <div className="space-y-6 text-lg text-slate-600 leading-relaxed">
+
+            <div className="space-y-6 text-sm text-gray-600 leading-loose font-light mb-12">
               <p>
                 What started as a small workshop has evolved into a symbol of
                 premium craftsmanship. Every jacket, bag, and wallet we produce
@@ -71,8 +68,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="mt-10 border-l-4 border-amber-500 pl-6 py-2">
-              <p className="text-xl font-bold text-slate-900 italic">
+            {/* Elegant Blockquote */}
+            <div className="border-t border-b border-gray-200/50 py-8 text-center lg:text-left">
+              <p className="text-lg md:text-xl font-serif text-[#111] italic leading-relaxed">
                 "We don't just make clothing. We make heirlooms meant to be
                 passed down to the next generation."
               </p>
@@ -81,66 +79,59 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 3. OUR PILLARS (Grid Section) */}
-      <section className="bg-slate-50 py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 mb-4">
-              The RS Leathers Standard
-            </h2>
-            <p className="text-lg text-slate-600">
-              The core principles that guide every cut, stitch, and finish.
+      {/* ── 3. OUR PILLARS (Airy, Borderless Grid) ── */}
+      <section className="bg-white py-24 md:py-32 border-t border-gray-200/50">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <p className="text-[#C8A96E] font-bold tracking-[0.25em] uppercase text-[10px] mb-4">
+              The Standard
             </p>
+            <h2 className="text-3xl md:text-4xl font-serif text-[#111]">
+              Core Principles
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-6">
-                <Scissors className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">
+          {/* Soft Grid Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-16">
+            <div className="flex flex-col items-center text-center group">
+              <Scissors className="w-8 h-8 text-[#111] stroke-[1.2] mb-6 transition-transform duration-500 group-hover:-translate-y-1" />
+              <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#111] mb-4">
                 Master Artistry
               </h3>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-[12px] text-gray-500 leading-relaxed font-light">
                 Hand-cut patterns and precision stitching ensure a flawless fit
                 and unmatched attention to detail.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center mb-6">
-                <ShieldCheck className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <div className="flex flex-col items-center text-center group">
+              <ShieldCheck className="w-8 h-8 text-[#111] stroke-[1.2] mb-6 transition-transform duration-500 group-hover:-translate-y-1" />
+              <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#111] mb-4">
                 Built for Life
               </h3>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-[12px] text-gray-500 leading-relaxed font-light">
                 Reinforced seams and heavy-duty YKK hardware guarantee your gear
                 survives whatever you throw at it.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-6">
-                <Leaf className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <div className="flex flex-col items-center text-center group">
+              <Leaf className="w-8 h-8 text-[#111] stroke-[1.2] mb-6 transition-transform duration-500 group-hover:-translate-y-1" />
+              <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#111] mb-4">
                 Ethical Sourcing
               </h3>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-[12px] text-gray-500 leading-relaxed font-light">
                 We partner exclusively with environmentally conscious tanneries
-                that treat their workers and materials with respect.
+                that treat their materials with respect.
               </p>
             </div>
 
-            <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
-              <div className="w-14 h-14 bg-slate-900 text-white rounded-xl flex items-center justify-center mb-6">
-                <Clock className="w-7 h-7" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">
+            <div className="flex flex-col items-center text-center group">
+              <Clock className="w-8 h-8 text-[#111] stroke-[1.2] mb-6 transition-transform duration-500 group-hover:-translate-y-1" />
+              <h3 className="text-[11px] font-bold tracking-[0.2em] uppercase text-[#111] mb-4">
                 Timeless Design
               </h3>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-[12px] text-gray-500 leading-relaxed font-light">
                 We ignore fleeting fast-fashion trends in favor of classic
                 silhouettes that look incredible in any decade.
               </p>
@@ -149,21 +140,26 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 4. CALL TO ACTION */}
-      <section className="bg-slate-900 text-white py-20 text-center px-4 sm:px-6">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-6">
-            Ready to experience the difference?
+      {/* ── 4. CALL TO ACTION (Brutalist / Editorial Block) ── */}
+      <section className="bg-[#111] text-[#FDFBF7] py-24 md:py-32 text-center px-4 sm:px-6">
+        <div className="max-w-2xl mx-auto flex flex-col items-center">
+          <p className="text-[#C8A96E] font-bold tracking-[0.25em] uppercase text-[10px] mb-6">
+            Begin Your Journey
+          </p>
+          <h2 className="text-3xl md:text-5xl font-serif tracking-wide mb-8 leading-tight">
+            Experience the difference.
           </h2>
-          <p className="text-lg text-slate-400 mb-10">
+          <p className="text-sm text-gray-400 mb-12 font-light leading-relaxed max-w-md mx-auto">
             Explore our latest collection and find the piece that will accompany
             you for the rest of your life.
           </p>
+
+          {/* Sharp, unrounded brutalist button */}
           <Link
             href="/shop"
-            className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-900 font-extrabold py-4 px-10 rounded-lg transition-transform hover:-translate-y-1 shadow-lg shadow-amber-500/20"
+            className="inline-flex items-center justify-center gap-4 bg-[#FDFBF7] text-[#111] hover:bg-[#C8A96E] hover:text-white font-bold text-[10px] tracking-[0.25em] uppercase py-5 px-10 transition-colors duration-300"
           >
-            Shop the Collection <ArrowRight className="w-5 h-5" />
+            Shop the Collection <ArrowRight className="w-4 h-4 stroke-[1.5]" />
           </Link>
         </div>
       </section>

@@ -1,36 +1,38 @@
 // app/components/layout/Footer.tsx
 "use client";
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 export default function Footer() {
-  const pathname = usePathname(); // <-- 3. READ THE URL
+  const pathname = usePathname();
 
-  // 4. IF WE ARE IN THE ADMIN PANEL, DO NOT SHOW THE FOOTER
+  // IF WE ARE IN THE ADMIN PANEL, DO NOT SHOW THE FOOTER
   if (pathname.startsWith("/admin")) {
     return null;
   }
+
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 border-t-4 border-amber-500 mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* TOP SECTION: Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+    <footer className="bg-[#111] text-[#FDFBF7] pt-20 pb-10 border-t border-[#222] mt-auto font-sans">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ── TOP SECTION: Architectural Grid ── */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 lg:gap-12 mb-20">
           {/* Column 1: Brand & About */}
-          <div className="space-y-4">
-            <h2 className="text-2xl font-extrabold text-white tracking-tight">
-              RS <span className="text-amber-500">Leathers</span>
+          <div className="space-y-6">
+            <h2 className="text-xl font-serif tracking-[0.1em] uppercase text-white">
+              RS Leather
             </h2>
-            <p className="text-sm leading-relaxed text-slate-400">
+            <p className="text-[11px] leading-loose text-gray-400 tracking-wide max-w-sm">
               Handcrafted, premium leather goods designed to last a lifetime.
               Uncompromising quality, ethical sourcing, and timeless style for
               the modern journey.
             </p>
-            <div className="flex space-x-4 pt-2">
-              {/* Custom SVG Facebook Icon */}
+
+            {/* Minimalist Social Icons (No background circles) */}
+            <div className="flex space-x-6 pt-2">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-slate-900 transition-colors"
+                className="text-gray-500 hover:text-[#C8A96E] transition-colors"
               >
                 <svg
                   width="18"
@@ -38,17 +40,16 @@ export default function Footer() {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
                   <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
                 </svg>
               </a>
-              {/* Custom SVG Instagram Icon */}
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-slate-900 transition-colors"
+                className="text-gray-500 hover:text-[#C8A96E] transition-colors"
               >
                 <svg
                   width="18"
@@ -56,19 +57,18 @@ export default function Footer() {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <rect x="2" y="2" width="20" height="20" rx="4" ry="4" />
                   <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
                 </svg>
               </a>
-              {/* Custom SVG Twitter Icon */}
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-amber-500 hover:text-slate-900 transition-colors"
+                className="text-gray-500 hover:text-[#C8A96E] transition-colors"
               >
                 <svg
                   width="18"
@@ -76,7 +76,7 @@ export default function Footer() {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="2"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
@@ -88,81 +88,58 @@ export default function Footer() {
 
           {/* Column 2: Quick Links */}
           <div>
-            <h3 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">
-              Shop
+            <h3 className="text-[10px] font-bold text-gray-500 mb-8 uppercase tracking-[0.25em]">
+              Collection
             </h3>
-            <ul className="space-y-3">
-              <li>
-                <Link
-                  href="/shop"
-                  className="text-sm hover:text-amber-500 transition-colors"
-                >
-                  All Products
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/jackets"
-                  className="text-sm hover:text-amber-500 transition-colors"
-                >
-                  Premium Jackets
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/bags"
-                  className="text-sm hover:text-amber-500 transition-colors"
-                >
-                  Travel Bags
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/categories/accessories"
-                  className="text-sm hover:text-amber-500 transition-colors"
-                >
-                  Accessories
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="text-sm hover:text-amber-500 transition-colors"
-                >
-                  Our Heritage
-                </Link>
-              </li>
+            <ul className="space-y-4">
+              {[
+                { name: "All Products", path: "/shop" },
+                { name: "Premium Jackets", path: "/categories/jackets" },
+                { name: "Travel Bags", path: "/categories/bags" },
+                { name: "Accessories", path: "/categories/accessories" },
+                { name: "Our Heritage", path: "/about" },
+              ].map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.path}
+                    className="text-[11px] tracking-widest uppercase text-gray-300 hover:text-[#C8A96E] transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Column 3: Customer Service */}
+          {/* Column 3: Customer Care */}
           <div>
-            <h3 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">
-              Customer Care
+            <h3 className="text-[10px] font-bold text-gray-500 mb-8 uppercase tracking-[0.25em]">
+              Client Services
             </h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3 text-sm">
-                <Phone size={16} className="text-amber-500 shrink-0 mt-0.5" />
-                <span>
-                  +92 300 1234567
-                  <br />
-                  <span className="text-xs text-slate-500">
+            <ul className="space-y-5">
+              <li className="flex items-start gap-4 text-[11px] tracking-wide text-gray-300">
+                <Phone className="w-4 h-4 text-gray-500 stroke-[1.5] mt-0.5" />
+                <span className="flex flex-col gap-1">
+                  <span className="uppercase tracking-widest">
+                    +92 300 1234567
+                  </span>
+                  <span className="text-[9px] text-gray-500 uppercase tracking-widest">
                     Mon-Fri, 9am - 6pm
                   </span>
                 </span>
               </li>
-              <li className="flex items-start gap-3 text-sm">
-                <Mail size={16} className="text-amber-500 shrink-0 mt-0.5" />
+              <li className="flex items-center gap-4 text-[11px] tracking-wide text-gray-300">
+                <Mail className="w-4 h-4 text-gray-500 stroke-[1.5]" />
                 <a
                   href="mailto:support@rsleathers.com"
-                  className="hover:text-amber-500 transition-colors"
+                  className="uppercase tracking-widest hover:text-[#C8A96E] transition-colors"
                 >
                   support@rsleathers.com
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-sm">
-                <MapPin size={16} className="text-amber-500 shrink-0 mt-0.5" />
-                <span>
+              <li className="flex items-start gap-4 text-[11px] tracking-wide text-gray-300">
+                <MapPin className="w-4 h-4 text-gray-500 stroke-[1.5] mt-0.5" />
+                <span className="uppercase tracking-widest leading-relaxed">
                   Lahore, Punjab,
                   <br />
                   Pakistan
@@ -173,23 +150,25 @@ export default function Footer() {
 
           {/* Column 4: Newsletter */}
           <div>
-            <h3 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">
-              Stay in the Loop
+            <h3 className="text-[10px] font-bold text-gray-500 mb-8 uppercase tracking-[0.25em]">
+              The Dispatch
             </h3>
-            <p className="text-sm text-slate-400 mb-4">
-              Subscribe to get special offers, free giveaways, and
-              once-in-a-lifetime deals.
+            <p className="text-[11px] text-gray-400 tracking-wide leading-relaxed mb-6">
+              Subscribe to receive updates on new arrivals, special offers, and
+              our heritage campaigns.
             </p>
-            <form className="flex flex-col space-y-2">
+            <form className="flex flex-col space-y-3">
+              {/* Sharp, unrounded brutalist input */}
               <input
                 type="email"
-                placeholder="Enter your email"
-                className="bg-slate-800 border border-slate-700 text-white px-4 py-3 rounded-md focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors w-full"
+                placeholder="EMAIL ADDRESS"
+                className="bg-transparent border border-gray-700 text-[#FDFBF7] text-[10px] uppercase tracking-[0.2em] px-4 py-4 rounded-none focus:outline-none focus:border-[#C8A96E] transition-colors w-full placeholder:text-gray-600"
                 required
               />
+              {/* Sharp, high-contrast button */}
               <button
                 type="submit"
-                className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-4 py-3 rounded-md transition-colors w-full"
+                className="bg-[#FDFBF7] hover:bg-[#C8A96E] text-[#111] hover:text-white text-[10px] font-bold uppercase tracking-[0.25em] px-4 py-4 rounded-none transition-colors w-full"
               >
                 Subscribe
               </button>
@@ -197,19 +176,28 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* BOTTOM SECTION: Copyright & Legal */}
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-slate-500 text-center md:text-left">
-            &copy; {new Date().getFullYear()} RS Leathers. All rights reserved.
+        {/* ── BOTTOM SECTION: Copyright & Legal ── */}
+        <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500 text-center md:text-left">
+            &copy; {new Date().getFullYear()} RS Leather. All rights reserved.
           </p>
-          <div className="flex space-x-6 text-sm text-slate-500">
-            <Link href="#" className="hover:text-amber-500 transition-colors">
+          <div className="flex flex-wrap justify-center gap-6 text-[10px] uppercase tracking-[0.2em] text-gray-500">
+            <Link
+              href="/privacy-policy"
+              className="hover:text-[#C8A96E] transition-colors"
+            >
               Privacy Policy
             </Link>
-            <Link href="#" className="hover:text-amber-500 transition-colors">
+            <Link
+              href="/terms-of-service"
+              className="hover:text-[#C8A96E] transition-colors"
+            >
               Terms of Service
             </Link>
-            <Link href="#" className="hover:text-amber-500 transition-colors">
+            <Link
+              href="/refund-policy"
+              className="hover:text-[#C8A96E] transition-colors"
+            >
               Refund Policy
             </Link>
           </div>
