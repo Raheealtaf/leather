@@ -6,11 +6,6 @@ import { prisma } from "@/lib/db";
 // =========================================
 // 1. IMPORT ALL YOUR NEW ASSETS HERE
 // =========================================
-
-import jacketPic from "./assets/5.jpeg";
-import travelBagPic from "./assets/02.jpeg";
-import accessoriesPic from "./assets/4.jpeg";
-
 import desktopBanner from "./assets/heroo.png";
 import mobileBanner from "./assets/mobile.jpeg";
 import AnimateIn from "./components/AnimateIn";
@@ -20,28 +15,20 @@ export const dynamic = "force-dynamic";
 const PLACEHOLDER_IMG =
   "https://placehold.co/600x800/e2e8f0/64748b?text=No+Image";
 
-// Extended categories for the new Circular Navigation
-const circleCategories = [
-  { name: "Jackets", href: "/categories/jackets", img: jacketPic.src },
-  { name: "Travel Bags", href: "/categories/bags", img: travelBagPic.src },
-  {
-    name: "Accessories",
-    href: "/categories/accessories",
-    img: accessoriesPic.src,
-  },
-  // Reusing an image for demonstration. Add your own wallet/belt images!
-  { name: "Wallets", href: "/categories/wallets", img: accessoriesPic.src },
-];
-
 export default async function Home() {
+  // FETCH FEATURED PRODUCTS
   const featuredProducts = await prisma.product.findMany({
     take: 4,
     orderBy: { id: "desc" },
     include: { category: true },
   });
 
+  // FETCH CATEGORIES DIRECTLY FROM YOUR DATABASE
+  const dbCategories = await prisma.category.findMany({
+    orderBy: { id: "asc" },
+  });
+
   return (
-    // bg-[#FDFBF7] is a very soft, premium warm canvas color (no harsh white)
     <div className="flex flex-col min-h-screen bg-[#FDFBF7] text-[#111] font-sans pt-16 sm:pt-20">
       <AnimateIn>
         {/* ── 1. FULL-BLEED HERO SECTION (No Borders) ── */}
@@ -52,7 +39,6 @@ export default async function Home() {
               alt="Discover the Collection"
               className="w-full h-[75vh] object-cover"
             />
-            {/* Elegant text overlay */}
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-16 bg-gradient-to-t from-black/60 to-transparent">
               <h2 className="text-white text-3xl font-serif tracking-wide mb-4">
                 Autumn Collection
@@ -80,32 +66,52 @@ export default async function Home() {
           </Link>
         </section>
 
-        {/* ── 2. CIRCULAR CATEGORY NAVIGATION ── */}
+        {/* ── 2. DYNAMIC CIRCULAR CATEGORY NAVIGATION ── */}
         <section className="py-16 md:py-24 border-b border-gray-200/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-center gap-8 md:gap-20 overflow-x-auto no-scrollbar snap-x px-4">
-              {circleCategories.map((cat, index) => (
-                <Link
-                  key={index}
-                  href={cat.href}
-                  className="group flex flex-col items-center gap-5 min-w-[90px] snap-center"
-                >
-                  {/* Perfect Circle Image Container */}
-                  <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#C8A96E] transition-all duration-300 p-1">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-gray-100">
-                      <img
-                        src={cat.img}
-                        alt={cat.name}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                      />
+              {/* Show this if the admin hasn't added any categories yet */}
+              {dbCategories.length === 0 && (
+                <p className="text-xs text-gray-400 tracking-widest uppercase">
+                  No categories found.
+                </p>
+              )}
+
+              {/* Loop through the database categories */}
+              {dbCategories.map((cat) => {
+                // Dynamically create the URL link (e.g., "Travel Bags" becomes "travel-bags")
+                const categorySlug = cat.name
+                  .toLowerCase()
+                  .replace(/\s+/g, "-");
+
+                // Use the image from the admin panel, or a placeholder if missing
+                const imageSrc =
+                  cat.imageUrl ||
+                  "https://placehold.co/400x400/f3f4f6/9ca3af?text=No+Image";
+
+                return (
+                  <Link
+                    key={cat.id}
+                    href={`/categories/${categorySlug}`}
+                    className="group flex flex-col items-center gap-5 min-w-[90px] snap-center"
+                  >
+                    {/* Perfect Circle Image Container */}
+                    <div className="w-24 h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#C8A96E] transition-all duration-300 p-1">
+                      <div className="w-full h-full rounded-full overflow-hidden bg-gray-100">
+                        <img
+                          src={imageSrc}
+                          alt={cat.name}
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                        />
+                      </div>
                     </div>
-                  </div>
-                  {/* Clean, tracked-out text */}
-                  <span className="text-[10px] md:text-xs tracking-[0.2em] uppercase font-semibold text-gray-900 group-hover:text-[#C8A96E] transition-colors">
-                    {cat.name}
-                  </span>
-                </Link>
-              ))}
+                    {/* Clean, tracked-out text */}
+                    <span className="text-[10px] md:text-xs tracking-[0.2em] uppercase font-semibold text-gray-900 group-hover:text-[#C8A96E] transition-colors whitespace-nowrap">
+                      {cat.name}
+                    </span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -113,7 +119,6 @@ export default async function Home() {
         {/* ── 3. FEATURED PRODUCTS (Minimalist Grid) ── */}
         <section className="py-20 md:py-32">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Elegant Centered Header */}
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-serif text-[#111] tracking-wide mb-4">
                 Curated Additions
@@ -126,7 +131,6 @@ export default async function Home() {
               </Link>
             </div>
 
-            {/* Borderless Product Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-12 md:gap-x-10 md:gap-y-16">
               {featuredProducts.map((product) => {
                 const firstImage = product.images
@@ -139,21 +143,18 @@ export default async function Home() {
                     href={`/product/${product.id}`}
                     className="group flex flex-col"
                   >
-                    {/* Minimal Image Container */}
                     <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-6">
                       <img
                         src={firstImage}
                         alt={product.name}
                         className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                       />
-                      {/* Gentle Hover Overlay */}
                       <div className="absolute inset-0 bg-black/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
                     </div>
 
-                    {/* Centered Minimalist Typography */}
                     <div className="flex flex-col text-center space-y-2">
                       <p className="text-[9px] font-bold tracking-[0.2em] text-gray-400 uppercase">
-                        {product.category.name}
+                        {product.category?.name || "Uncategorized"}
                       </p>
                       <h3 className="text-sm font-semibold text-[#111] uppercase tracking-wider line-clamp-1 group-hover:text-[#C8A96E] transition-colors">
                         {product.name}
@@ -172,7 +173,6 @@ export default async function Home() {
         {/* ── 4. SOFT VALUE PROPOSITIONS ── */}
         <section className="py-20 border-t border-gray-200/50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Open, airy grid with no vertical dividers */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
               <div className="flex flex-col items-center">
                 <Truck className="h-7 w-7 text-gray-800 stroke-[1.5] mb-5" />

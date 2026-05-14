@@ -2,7 +2,7 @@
 import { prisma } from "@/lib/db";
 import CategoryForm from "../CategoryForm";
 import DeleteCategoryButton from "../DeleteCategoryButton";
-import { Tags } from "lucide-react";
+import { Tags, Image as ImageIcon } from "lucide-react"; // Imported ImageIcon for the fallback
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +45,10 @@ export default async function CategoriesPage() {
                     <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                       ID
                     </th>
+                    {/* NEW: Image Column Header */}
+                    <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      Image
+                    </th>
                     <th className="px-6 py-4 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
                       Name
                     </th>
@@ -65,6 +69,22 @@ export default async function CategoriesPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-400">
                         #{category.id}
                       </td>
+
+                      {/* NEW: Image Thumbnail Cell */}
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {category.imageUrl ? (
+                          <img
+                            src={category.imageUrl}
+                            alt={category.name}
+                            className="h-10 w-10 rounded-full object-cover border border-slate-200"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
+                            <ImageIcon className="h-4 w-4 text-slate-400" />
+                          </div>
+                        )}
+                      </td>
+
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-900">
                         {category.name}
                       </td>
