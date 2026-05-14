@@ -1,3 +1,4 @@
+// app/actions/category.ts
 "use server";
 
 import { prisma } from "@/lib/db";
@@ -11,6 +12,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// 1. CREATE CATEGORY (With Cloudinary)
 export async function createCategory(formData: FormData) {
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
@@ -19,17 +21,17 @@ export async function createCategory(formData: FormData) {
   let imageUrl = "";
 
   if (file && file.size > 0) {
-    // 1. Convert the file to a Base64 string (Serverless friendly)
+    // Convert the file to a Base64 string (Serverless friendly)
     const buffer = Buffer.from(await file.arrayBuffer());
     const base64Image = buffer.toString("base64");
     const dataURI = `data:${file.type};base64,${base64Image}`;
 
-    // 2. Upload directly to Cloudinary
+    // Upload directly to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(dataURI, {
       folder: "rs_leather",
     });
 
-    // 3. Grab the live, permanent URL
+    // Grab the live, permanent URL
     imageUrl = uploadResponse.secure_url;
   }
 
@@ -42,6 +44,27 @@ export async function createCategory(formData: FormData) {
     },
   });
 
+  revalidatePath("/admin/categories");
+  revalidatePath("/");
+}
+
+// 2. DELETE CATEGORY (Foreign-Key Safe)
+export async function deleteCategory(id: number) {
+  // First, delete all products inside this category to prevent database crashes
+  await prisma.product.deleteMany({
+    where: {
+      categoryId: id,
+    },
+  });
+
+  // Now it is safe to delete the empty category
+  await prisma.category.delete({
+    where: {
+      id: id,
+    },
+  });
+
+  // Refresh the pages
   revalidatePath("/admin/categories");
   revalidatePath("/");
 }
