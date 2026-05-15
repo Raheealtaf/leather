@@ -66,9 +66,10 @@ export default async function ProductsListPage() {
             <tbody className="bg-white divide-y divide-gray-100">
               {products.map((product) => {
                 // Grab the first color class for the image thumbnail placeholder
-                const thumbnailClass = product.images
+                // Grab the first image URL from the list
+                const firstImage = product.images
                   ? product.images.split(",")[0]
-                  : "bg-gray-100";
+                  : null;
 
                 return (
                   <tr
@@ -78,9 +79,16 @@ export default async function ProductsListPage() {
                     {/* Product Column */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-4">
-                        <div
-                          className={`h-10 w-10 rounded-md shrink-0 border border-slate-200 ${thumbnailClass}`}
-                        ></div>
+                        {/* Render the actual Image */}
+                        {firstImage ? (
+                          <img
+                            src={firstImage}
+                            alt={product.name}
+                            className="h-10 w-10 rounded-md object-cover border border-slate-200"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-md shrink-0 border border-slate-200 bg-gray-100"></div>
+                        )}
                         <div className="font-medium text-slate-900">
                           {product.name}
                         </div>
