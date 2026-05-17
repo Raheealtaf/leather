@@ -22,9 +22,9 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Shop All", path: "/shop" },
-    { name: "Jackets", path: "/categories/jackets" },
-    { name: "Travel Bags", path: "/categories/bags" },
-    { name: "Accessories", path: "/categories/accessories" },
+    { name: "Leather Bag", path: "/categories/leather-bag" },
+    { name: "Travel Bags", path: "/categories/duffle-bag" },
+    { name: "Accessories", path: "/categories/key-chain" },
     { name: "The Heritage", path: "/about" },
   ];
 
