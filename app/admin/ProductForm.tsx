@@ -50,14 +50,39 @@ export default function ProductForm({
 }) {
   const isEditing = !!initialData;
 
+  // 1. Image Upload States
   const [imageUrls, setImageUrls] = useState<string[]>(
     initialData?.images ? initialData.images.split(",") : [],
   );
   const [isUploading, setIsUploading] = useState(false);
 
+  // 2. NEW: Dynamic Category States
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
+    initialData?.categoryId?.toString() || "",
+  );
+
+  const [attributes, setAttributes] = useState<Record<string, string>>(() => {
+    if (initialData?.attributes) {
+      return typeof initialData.attributes === "string"
+        ? JSON.parse(initialData.attributes)
+        : initialData.attributes;
+    }
+    return {};
+  });
+
   const formAction = isEditing
     ? updateProduct.bind(null, initialData.id)
     : createProduct;
+
+  // 3. Helper Functions
+  const selectedCategoryName =
+    categories
+      .find((c) => c.id.toString() === selectedCategoryId)
+      ?.name.toLowerCase() || "";
+
+  const handleAttributeChange = (key: string, value: string) => {
+    setAttributes((prev) => ({ ...prev, [key]: value }));
+  };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -69,7 +94,6 @@ export default function ProductForm({
     }
 
     setIsUploading(true);
-
     const uploadPreset = "rsleather_preset";
     const cloudName = "dloxxalwa";
 
@@ -81,32 +105,22 @@ export default function ProductForm({
 
         const response = await fetch(
           `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          },
+          { method: "POST", body: formData },
         );
 
-        // THE RAW TEXT DEBUGGER: If Cloudinary blocks it, get the raw text!
         if (!response.ok) {
           const rawErrorText = await response.text();
-          console.error("RAW CLOUDINARY ERROR:", rawErrorText);
           throw new Error(`Cloudinary Rejection: ${rawErrorText}`);
         }
 
         const data = await response.json();
-
-        if (data.secure_url) {
-          return data.secure_url;
-        }
-
+        if (data.secure_url) return data.secure_url;
         throw new Error("Upload failed: No URL returned from Cloudinary");
       });
 
       const newlyUploadedUrls = await Promise.all(uploadPromises);
       setImageUrls((prev) => [...prev, ...newlyUploadedUrls].slice(0, 5));
     } catch (error: any) {
-      // Print the exact error to the screen so we can read it!
       console.error("Upload process caught an error:", error);
       alert(`${error.message}`);
     } finally {
@@ -120,7 +134,9 @@ export default function ProductForm({
 
   return (
     <form action={formAction} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* LEFT COLUMN */}
       <div className="lg:col-span-2 space-y-8">
+        {/* General Info Card */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-6">
             <Package className="h-5 w-5 text-amber-500" /> General Information
@@ -155,6 +171,7 @@ export default function ProductForm({
           </div>
         </div>
 
+        {/* Images Card */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
@@ -177,7 +194,6 @@ export default function ProductForm({
                     alt={`Upload ${index + 1}`}
                     className="w-full h-full object-cover"
                   />
-
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
@@ -185,7 +201,6 @@ export default function ProductForm({
                   >
                     <X className="w-4 h-4" />
                   </button>
-
                   {index === 0 && (
                     <div className="absolute bottom-0 inset-x-0 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold text-center py-1 uppercase tracking-wider">
                       Main Image
@@ -240,12 +255,13 @@ export default function ProductForm({
         </div>
       </div>
 
+      {/* RIGHT COLUMN */}
       <div className="space-y-8">
+        {/* Pricing Card */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-6">
             <DollarSign className="h-5 w-5 text-amber-500" /> Pricing
           </h2>
-
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">
               Price (Rs)
@@ -265,6 +281,7 @@ export default function ProductForm({
           </div>
         </div>
 
+        {/* Organization Card */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2 mb-6">
             <Tag className="h-5 w-5 text-amber-500" /> Organization
@@ -278,7 +295,8 @@ export default function ProductForm({
               <select
                 required
                 name="categoryId"
-                defaultValue={initialData?.categoryId || ""}
+                value={selectedCategoryId}
+                onChange={(e) => setSelectedCategoryId(e.target.value)}
                 className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-slate-900 focus:border-amber-500 focus:ring-amber-500 bg-white outline-none"
               >
                 <option value="">Select a category...</option>
@@ -289,6 +307,120 @@ export default function ProductForm({
                 ))}
               </select>
             </div>
+
+            {/* DYNAMIC FORM FIELDS INJECTION */}
+            {selectedCategoryName.includes("hide") ||
+            selectedCategoryName.includes("skin") ? (
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg space-y-4">
+                <h3 className="font-bold text-amber-800 text-sm">
+                  Leather Hide Details
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Square Footage (SqFt)
+                    </label>
+                    <input
+                      type="text"
+                      value={attributes.sqft || ""}
+                      onChange={(e) =>
+                        handleAttributeChange("sqft", e.target.value)
+                      }
+                      className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-slate-900"
+                      placeholder="e.g. 24"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Thickness
+                    </label>
+                    <input
+                      type="text"
+                      value={attributes.thickness || ""}
+                      onChange={(e) =>
+                        handleAttributeChange("thickness", e.target.value)
+                      }
+                      className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-slate-900"
+                      placeholder="e.g. 1.2mm"
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : selectedCategoryName.includes("wallet") ? (
+              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-4">
+                <h3 className="font-bold text-blue-800 text-sm">
+                  Wallet Details
+                </h3>
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    Number of Card Slots
+                  </label>
+                  <input
+                    type="number"
+                    value={attributes.cardSlots || ""}
+                    onChange={(e) =>
+                      handleAttributeChange("cardSlots", e.target.value)
+                    }
+                    className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-slate-900"
+                    placeholder="e.g. 6"
+                  />
+                </div>
+              </div>
+            ) : selectedCategoryName.includes("bag") ? (
+              <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-4">
+                <h3 className="font-bold text-green-800 text-sm">
+                  Bag Dimensions
+                </h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Length (cm)
+                    </label>
+                    <input
+                      type="text"
+                      value={attributes.length || ""}
+                      onChange={(e) =>
+                        handleAttributeChange("length", e.target.value)
+                      }
+                      className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-slate-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Width (cm)
+                    </label>
+                    <input
+                      type="text"
+                      value={attributes.width || ""}
+                      onChange={(e) =>
+                        handleAttributeChange("width", e.target.value)
+                      }
+                      className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-slate-900"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      Height (cm)
+                    </label>
+                    <input
+                      type="text"
+                      value={attributes.height || ""}
+                      onChange={(e) =>
+                        handleAttributeChange("height", e.target.value)
+                      }
+                      className="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-slate-900"
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {/* Hidden Input to send the dynamic fields to the server */}
+            <input
+              type="hidden"
+              name="attributes"
+              value={JSON.stringify(attributes)}
+            />
 
             <div className="flex items-center justify-between pt-4 border-t border-slate-100">
               <div className="flex items-center gap-2">

@@ -18,20 +18,23 @@ model Category {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
-  price       Decimal     @db.Decimal(10, 2)
-  description String      @db.Text
-  images      String      @db.Text
-  sizes       String      // e.g., "S,M,L,XL"
-  inStock     Boolean     @default(true)
+  price       Decimal   @db.Decimal(10, 2)
+  description String    @db.Text
+  images      String    @db.Text
+  sizes       String    // e.g., "S,M,L,XL"
+  inStock     Boolean   @default(true)
   
+  // NEW: Flexible JSON field for dynamic category attributes
+  attributes  Json?
+
   // Relationship to Category
   categoryId  Int
-category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   orderItems  OrderItem[]
 }
 
@@ -59,28 +62,21 @@ model Order {
   shippingCost  Float       // 0 for free, 500 for standard
   
   // Order Status Tracking
-  status        String      @default("Pending") // Pending, Confirmed, Dispatched, Delivered, Cancelled
+  status        String      @default("Pending") 
   
-  // Timestamps
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
-
-  // Relation to the items inside this order
   items         OrderItem[]
 }
 
 model OrderItem {
-  id        Int      @id @default(autoincrement())
-  
-  // What did they buy and how much did it cost at the time?
+  id        Int     @id @default(autoincrement())
   quantity  Int
   price     Float
   
-  // Link to the specific order
   orderId   Int
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   
-  // Link to the specific product (FIXED: Only defined once, with Cascade included!)
   productId Int
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
