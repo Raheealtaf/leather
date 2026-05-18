@@ -29,7 +29,7 @@ export default async function Home() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FDFBF7] text-[#111] font-sans pt-16 sm:pt-20">
+    <div className="flex flex-col min-h-[100dvh] bg-[#FDFBF7] text-[#111] font-sans pb-20 md:pb-0">
       <AnimateIn>
         {/* ── 1. FULL-BLEED HERO SECTION ── */}
         <section className="w-full">
@@ -42,7 +42,7 @@ export default async function Home() {
             />
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-12 sm:pb-16 bg-gradient-to-t from-black/70 via-black/20 to-transparent px-4 text-center">
               <h2 className="text-white text-3xl sm:text-4xl font-serif tracking-wide mb-4">
-                Autumn Collection
+                Leather Collection
               </h2>
               <span className="text-white text-[10px] sm:text-xs font-bold tracking-[0.2em] uppercase border-b border-white pb-1">
                 Shop Now
@@ -71,7 +71,6 @@ export default async function Home() {
         {/* ── 2. DYNAMIC CIRCULAR CATEGORY NAVIGATION ── */}
         <section className="py-12 sm:py-16 md:py-24 border-b border-gray-200/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {/* Added justify-start for mobile so the left side isn't cut off on small screens */}
             <div className="flex justify-start md:justify-center gap-6 sm:gap-8 md:gap-20 overflow-x-auto no-scrollbar snap-x pb-4">
               {dbCategories.length === 0 && (
                 <p className="text-xs text-gray-400 tracking-widest uppercase w-full text-center">
@@ -93,7 +92,7 @@ export default async function Home() {
                     href={`/categories/${categorySlug}`}
                     className="group flex flex-col items-center gap-3 sm:gap-5 min-w-[80px] sm:min-w-[90px] snap-start md:snap-center"
                   >
-                    {/* Circle Image Container - Scaled for better mobile fit */}
+                    {/* Circle Image Container */}
                     <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-36 md:h-36 rounded-full overflow-hidden border-2 border-transparent group-hover:border-[#C8A96E] transition-all duration-300 p-1 shrink-0">
                       <div className="w-full h-full rounded-full overflow-hidden bg-gray-100">
                         <img
@@ -129,7 +128,6 @@ export default async function Home() {
               </Link>
             </div>
 
-            {/* Product Grid - Adjusted gaps for mobile */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 sm:gap-x-6 md:gap-x-10 gap-y-10 sm:gap-y-12 md:gap-y-16">
               {featuredProducts.map((product) => {
                 const firstImage = product.images
@@ -172,7 +170,7 @@ export default async function Home() {
         </section>
 
         {/* ── 4. SOFT VALUE PROPOSITIONS ── */}
-        <section className="py-16 sm:py-20 border-t border-gray-200/50">
+        <section className="pt-16 pb-8 sm:py-20 border-t border-gray-200/50">
           <div className="max-w-6xl mx-auto px-6 sm:px-8">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-12 text-center">
               <div className="flex flex-col items-center">
